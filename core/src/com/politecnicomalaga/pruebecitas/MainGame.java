@@ -1,6 +1,7 @@
 package com.politecnicomalaga.pruebecitas;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,6 +26,11 @@ public class MainGame implements Screen {
 
 		screen.batch.begin();
 		screen.batch.draw(img, 100, 100);
+
+		//Si se presiona el botón de escape se habre el menú de pausa del juego
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+			screen.setScreen(new PauseMenuScreen(screen, this));
+		}
 		screen.batch.end();
 	}
 
