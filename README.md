@@ -29,6 +29,11 @@ Durante la lucha con el jefe final, este puede usar tres ataques diferentes. Los
 ASPECTOS
 
 Aún no definidas
+
+################################################################################################
+
+Avances del juego:
+Día 1: Implementación de menús con pantallas: menú inicial, menú de pause y pantalla de juego.
 ________________________________________________________________________________________________
 
 ################################################################################################
