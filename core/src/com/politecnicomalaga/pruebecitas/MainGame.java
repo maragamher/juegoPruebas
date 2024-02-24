@@ -6,6 +6,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
+/*
+* Pantalla donde se desarrolla el juego
+* */
 public class MainGame implements Screen {
 	MainScreen screen;
 	Texture img;
@@ -27,7 +30,7 @@ public class MainGame implements Screen {
 		screen.batch.begin();
 		screen.batch.draw(img, 100, 100);
 
-		//Si se presiona el botón de escape se habre el menú de pausa del juego
+		//Si se presiona el botón de escape se abre el menú de pausa del juego
 		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
 			screen.setScreen(new PauseMenuScreen(screen, this));
 		}

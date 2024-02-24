@@ -4,7 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-
+/*
+* Este es el menú principal. Debe permitir al usuario comenzar a jugar o salir de la aplicación
+* Componentes:
+*   - PLAY: al ser pulsada esta opción el juego comienza a ejecutarse
+*   - EXIT: al ser pulsada se cierra la aplicación
+* En un futuro se implementará una opción para comenzar un tutorial si es la primera vez que se
+* o si el usuario quiere recordar mecánicas del juego.
+* También se podrá guardar la partida o empezar una nueva.*/
 public class MainMenuScreen implements Screen {
 
     private final int PLAY_BUTTON_WIDTH = 150;
@@ -70,10 +77,11 @@ public class MainMenuScreen implements Screen {
 
     public void drawPlayButton(){
         int x = Gdx.graphics.getWidth()/2 - PLAY_BUTTON_WIDTH/2;
+        //Si se coloca el cursor encima de las letras estas cambian sus texturas dando sensación que de se que "activa" la opción
         if(Gdx.input.getX() > x && Gdx.input.getX() < x+PLAY_BUTTON_WIDTH && Gdx.graphics.getHeight()-Gdx.input.getY() > PLAY_BUTTON_Y &&  Gdx.graphics.getHeight()-Gdx.input.getY() < PLAY_BUTTON_Y+PLAY_BUTTON_HEIGHT){
             screen.batch.draw(play_button_active, Gdx.graphics.getWidth()/2 - PLAY_BUTTON_WIDTH/2, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
 
-            if(Gdx.input.justTouched()){
+            if(Gdx.input.justTouched()){    //Si se pulsa, esta pantalla desaparece y comienza el juego
                 this.dispose();
                 screen.setScreen(new MainGame(screen));
             }
@@ -83,10 +91,11 @@ public class MainMenuScreen implements Screen {
     }
     public void drawExitButton(){
         int x = Gdx.graphics.getWidth()/2 - EXIT_BUTTON_WIDTH/2;
+        //Si se coloca el cursor encima de las letras estas cambian sus texturas dando sensación que de se que "activa" la opción
         if(Gdx.input.getX() > x && Gdx.input.getX() < x+EXIT_BUTTON_WIDTH && Gdx.graphics.getHeight()-Gdx.input.getY() > EXIT_BUTTON_Y &&  Gdx.graphics.getHeight()-Gdx.input.getY() < EXIT_BUTTON_Y+EXIT_BUTTON_HEIGHT){
             screen.batch.draw(exit_button_active, Gdx.graphics.getWidth()/2 - EXIT_BUTTON_WIDTH/2, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
 
-            if(Gdx.input.justTouched()){
+            if(Gdx.input.justTouched()){    //Si se pulsa, la aplicación se cierra
                 Gdx.app.exit();
             }
         }else{
