@@ -14,11 +14,12 @@ import com.badlogic.gdx.utils.Array;
 
 public class Player extends Sprite implements InputProcessor {
     private final float speed = 60 * 2;
-    private final float gravity = 60 * 2f;
+    private final float gravity = 60 * 2.4f;
+    private final String groundKey = "ground";
+    private final String doorKey = "door";
     private Vector2 vel;    //Movement velocity
     private boolean canJump;
     private TiledMapTileLayer collisionLayer;
-    private String groundKey = "ground";
     //Animacion
     private TextureRegion playerStand;
     public enum State{FALLING, JUMPING, STANDING, RUNNING}//Enumeracion de los estados del jugador(parado, corriendo, saltando...)
@@ -33,18 +34,18 @@ public class Player extends Sprite implements InputProcessor {
         super(sprite);
         this.vel = new Vector2();
         this.collisionLayer = collisionLayer;
-        setSize(collisionLayer.getTileWidth(), collisionLayer.getTileHeight()*1.5f);
+        setSize(collisionLayer.getTileWidth() - 2, collisionLayer.getTileHeight()*1.5f);
 
         currentState = State.STANDING;
         previosState = State.STANDING;
         stateTimer = 0;
         runningRight = true;
 
-        float frameDuration = 0.3f;
-        int frameWidth = 39, frameHeigth = 56;
+        float frameDuration = 0.2f;
+        int frameWidth = 35, frameHeigth = 56;
 
         //Para crear una animacion lo primero que tenemos que hacer es crear un array de texturas para pasarle al constructor la textura de la animacion
-        Array<TextureRegion> frames = new Array<TextureRegion>();
+        Array<TextureRegion> frames = new Array<>();
         for(int i = 0; i<3; i++){       //i<4: dentro de nuestro player.png, la animacion de correr dura hasta la imagen 3
             frames.add(new TextureRegion(getTexture(), i*frameWidth,0 , frameWidth, frameHeigth));
         }
@@ -62,6 +63,8 @@ public class Player extends Sprite implements InputProcessor {
 
         playerStand = new TextureRegion(getTexture(), 0,0,frameWidth,frameHeigth);
         setRegion(playerStand);
+
+        setPosition(3 * getCollisionLayer().getTileWidth(),47 * getCollisionLayer().getTileHeight());
     }
     public void draw(SpriteBatch batch){
         update(Gdx.graphics.getDeltaTime());
@@ -122,17 +125,44 @@ public class Player extends Sprite implements InputProcessor {
 
         setRegion(getFrame(delta));
 
+        //Interacción con puertas
+
+        if(Gdx.input.isKeyPressed(Input.Keys.F)){
+            if(isCellADoor(getX(), getY())){
+                setPosition(2 * getCollisionLayer().getTileWidth(),2 * getCollisionLayer().getTileHeight());
+            }
+        }
+
+        //Interaccion con escaleras
+
+        if(isCellAStair(getX(), getY())){
+            if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+                vel.y = speed / 8;
+                setY(getY() + vel.y * delta);
+            }
+        }
     }
 
-    private boolean isCellBlocked(float x, float y){
+    //Métodos para comprobar las colisiones
+    public boolean isCellBlocked(float x, float y){
         Cell cell = collisionLayer.getCell((int) (x/collisionLayer.getTileWidth()), (int) (y/collisionLayer.getTileHeight()));
         return cell != null && cell.getTile() != null && cell.getTile().getProperties().containsKey(groundKey);
+    }
+    public boolean isCellADoor(float x, float y){
+        Cell cell = collisionLayer.getCell((int) (x/collisionLayer.getTileWidth()), (int) (y/collisionLayer.getTileHeight()));
+        return cell != null && cell.getTile() != null && cell.getTile().getProperties().containsKey(doorKey);
+    }
+
+    public boolean isCellAStair(float x, float y){
+        Cell cell = collisionLayer.getCell((int) (x/collisionLayer.getTileWidth()), (int) (y/collisionLayer.getTileHeight()));
+        return cell != null && cell.getTile() != null && cell.getTile().getProperties().containsKey("stairs");
     }
 
     private boolean collidesRigth(){
         for(float step = 0; step < getHeight(); step += collisionLayer.getTileHeight() / 2) {
             if (isCellBlocked(getX() + getWidth(), getY() + step))
                 return true;
+
         }
         return false;
     }
@@ -158,6 +188,7 @@ public class Player extends Sprite implements InputProcessor {
         return false;
     }
 
+    //Métodos para la animación del personaje
     public TextureRegion getFrame(float dt){
         //Lo primero que saber en que estado el jugador
         currentState = getState();
@@ -188,6 +219,11 @@ public class Player extends Sprite implements InputProcessor {
             runningRight = true;
         }
 
+        /*
+        * if(currentState == previosState){
+        * stateTimer += dt;
+        * }else{
+        * stateTimer = 0;}*/
         stateTimer = currentState == previosState ? stateTimer + dt : 0;
         previosState = currentState;
         return region;
@@ -195,7 +231,7 @@ public class Player extends Sprite implements InputProcessor {
 
     public State getState(){
         if(vel.y > 0 || vel.y <0 && previosState == State.JUMPING)
-            //Esta animacion se ejecutara cuando Mario salte y cuando caiga después de saltar, pero no cuando se caiga por el edge del mundo
+            //Esta animacion se ejecutara cuando el jugador salte y cuando caiga después de saltar, pero no cuando se caiga por el edge del mundo
             return State.JUMPING;
         else if(vel.y < 0)
             return State.FALLING;
@@ -204,19 +240,21 @@ public class Player extends Sprite implements InputProcessor {
         else
             return State.STANDING;
     }
-
     @Override
     public boolean keyDown(int keycode) {
-        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+        //Movimiento
+        if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
             if (canJump) {
                 vel.y = speed / 1.5f;
                 canJump = false;
             }
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             vel.x = -speed;
-        }else if(Gdx.input.isKeyPressed(Input.Keys.D)){
+        }else if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
             vel.x = speed;
+        }else{
+            vel.x = 0;
         }
         return true;
     }
@@ -225,7 +263,9 @@ public class Player extends Sprite implements InputProcessor {
     public boolean keyUp(int keycode) {
         switch(keycode) {
             case Input.Keys.A:
+            case Input.Keys.LEFT:
             case Input.Keys.D:
+            case Input.Keys.RIGHT:
                 vel.x = 0;
         }
         return true;
@@ -267,28 +307,8 @@ public class Player extends Sprite implements InputProcessor {
     }
 
     //Getters y setters
-    public Vector2 getVel() {
-        return vel;
-    }
-
-    public void setVel(Vector2 vel) {
-        this.vel = vel;
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public float getGravity() {
-        return gravity;
-    }
-
 
     public TiledMapTileLayer getCollisionLayer() {
         return collisionLayer;
-    }
-
-    public void setCollisionLayer(TiledMapTileLayer collisionLayer) {
-        this.collisionLayer = collisionLayer;
     }
 }

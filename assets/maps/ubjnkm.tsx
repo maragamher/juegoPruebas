@@ -39,4 +39,40 @@
    <property name="ground" value=""/>
   </properties>
  </tile>
+ <tile id="92">
+  <properties>
+   <property name="dead" value=""/>
+  </properties>
+ </tile>
+ <tile id="125">
+  <properties>
+   <property name="end of stairs" value=""/>
+   <property name="stairs" value=""/>
+  </properties>
+ </tile>
+ <tile id="140">
+  <properties>
+   <property name="stairs" value=""/>
+  </properties>
+ </tile>
+ <tile id="155">
+  <properties>
+   <property name="broken stairs" value=""/>
+  </properties>
+ </tile>
+ <tile id="163">
+  <properties>
+   <property name="door" value=""/>
+  </properties>
+ </tile>
+ <tile id="170">
+  <properties>
+   <property name="stairs" value=""/>
+  </properties>
+ </tile>
+ <tile id="178">
+  <properties>
+   <property name="door" value=""/>
+  </properties>
+ </tile>
 </tileset>
