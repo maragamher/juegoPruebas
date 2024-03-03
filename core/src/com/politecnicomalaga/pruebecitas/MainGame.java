@@ -36,7 +36,7 @@ public class MainGame implements Screen {
 		camera = new OrthographicCamera();
 
 		//Jugador
-		player = new Player(new Sprite(new Texture("player.png")),(TiledMapTileLayer) map.getLayers().get(1));
+		player = new Player(new Sprite(new Texture("entities/player/player.png")),(TiledMapTileLayer) map.getLayers().get(1));
 	}
 
 	@Override

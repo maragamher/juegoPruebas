@@ -11,7 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 *   - EXIT: al ser pulsada se cierra la aplicación
 * En un futuro se implementará una opción para comenzar un tutorial si es la primera vez que se
 * o si el usuario quiere recordar mecánicas del juego.
-* También se podrá guardar la partida o empezar una nueva.*/
+* También se podrá guardar la partida o empezar una nueva.
+* */
 public class MainMenuScreen implements Screen {
 
     private final int PLAY_BUTTON_WIDTH = 150;
@@ -25,10 +26,10 @@ public class MainMenuScreen implements Screen {
     MainScreen screen;
     public MainMenuScreen(MainScreen screen){
         this.screen = screen;
-        this.play_button_active = new Texture("play-button-active.png");
-        this.play_button_inactive = new Texture("play-button-inactive.png");
-        this.exit_button_active = new Texture("exit-button-active.png");
-        this.exit_button_inactive = new Texture("exit-button-inactive.png");
+        this.play_button_active = new Texture("screens/button/play-button-active.png");
+        this.play_button_inactive = new Texture("screens/button/play-button-inactive.png");
+        this.exit_button_active = new Texture("screens/button/exit-button-active.png");
+        this.exit_button_inactive = new Texture("screens/button/exit-button-inactive.png");
     }
 
     @Override

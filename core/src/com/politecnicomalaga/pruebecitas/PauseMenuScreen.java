@@ -11,7 +11,9 @@ import com.badlogic.gdx.graphics.Texture;
  *   - RESUME: al ser pulsada esta opción se reanuda el juego
  *   - EXIT: al ser pulsada se vuelve al menú principal del juego
  * En un futuro se implementará una opción de guardar partida para que el jugador no pierda su progreso
- * y otra de ajustes para el volumen de la música, controles, etc.*/
+ * y otra de ajustes para el volumen de la música, controles, etc.
+ * */
+
 public class PauseMenuScreen implements Screen {
     private final int PAUSE_TITLE_WIDTH = 450;
     private final int PAUSE_TITLE_HEIGHT = 200;
@@ -29,11 +31,11 @@ public class PauseMenuScreen implements Screen {
     public PauseMenuScreen(MainScreen screen, MainGame game){
         this.screen = screen;
         this.game = game; //Se para por parámetro la pantalla de la  partida actua para poder volver a ella al pulsar el botón de "resume"
-        this.resume_button_active = new Texture("resume-button-active.png");
-        this.resume_button_inactive = new Texture("resume-button-inactive.png");
-        this.exit_button_active = new Texture("exit-button-active.png");
-        this.exit_button_inactive = new Texture("exit-button-inactive.png");
-        this.title_pause = new Texture("pause-title.png");
+        this.resume_button_active = new Texture("screens/button/resume-button-active.png");
+        this.resume_button_inactive = new Texture("screens/button/resume-button-inactive.png");
+        this.exit_button_active = new Texture("screens/button/exit-button-active.png");
+        this.exit_button_inactive = new Texture("screens/button/exit-button-inactive.png");
+        this.title_pause = new Texture("screens/pause-title.png");
     }
     @Override
     public void show() {

@@ -30,6 +30,10 @@ public class Player extends Sprite implements InputProcessor {
     private boolean runningRight;   //Indica a qué direccion va corriendo el jugador
     private float stateTimer;
 
+    //Posiciones de spawn de inicio, y las puertas del nivel
+    private int[] spawnPosition;
+    private int indexSpawnPosition;
+
     public Player(Sprite sprite, TiledMapTileLayer collisionLayer){
         super(sprite);
         this.vel = new Vector2();
@@ -64,7 +68,14 @@ public class Player extends Sprite implements InputProcessor {
         playerStand = new TextureRegion(getTexture(), 0,0,frameWidth,frameHeigth);
         setRegion(playerStand);
 
-        setPosition(3 * getCollisionLayer().getTileWidth(),47 * getCollisionLayer().getTileHeight());
+        //{x0, y0, x1, y1, x2, y2, x3, y3...}
+        spawnPosition = new int[]{/*spawn 1*/3, 47,/*spawn 2*/2, 2};
+        indexSpawnPosition = 0;
+        setX(spawnPosition[indexSpawnPosition] * getCollisionLayer().getTileWidth());
+        indexSpawnPosition++;
+        setY(spawnPosition[indexSpawnPosition] * getCollisionLayer().getTileHeight());
+        //setPosition(spawnPosition[0] * getCollisionLayer().getTileWidth(),spawnPosition[1] * getCollisionLayer().getTileHeight());
+
     }
     public void draw(SpriteBatch batch){
         update(Gdx.graphics.getDeltaTime());
@@ -127,16 +138,20 @@ public class Player extends Sprite implements InputProcessor {
 
         //Interacción con puertas
 
-        if(Gdx.input.isKeyPressed(Input.Keys.F)){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F)){
             if(isCellADoor(getX(), getY())){
-                setPosition(2 * getCollisionLayer().getTileWidth(),2 * getCollisionLayer().getTileHeight());
+                indexSpawnPosition++;
+                setX(spawnPosition[indexSpawnPosition] * getCollisionLayer().getTileWidth());
+                indexSpawnPosition++;
+                setY(spawnPosition[indexSpawnPosition] * getCollisionLayer().getTileHeight());
+                //setPosition(spawnPosition[indexSpawnPosition++] * getCollisionLayer().getTileWidth(),spawnPosition[indexSpawnPosition++] * getCollisionLayer().getTileHeight());
             }
         }
 
         //Interaccion con escaleras
 
         if(isCellAStair(getX(), getY())){
-            if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+            if(Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)){
                 vel.y = speed / 8;
                 setY(getY() + vel.y * delta);
             }
@@ -159,30 +174,30 @@ public class Player extends Sprite implements InputProcessor {
     }
 
     private boolean collidesRigth(){
-        for(float step = 0; step < getHeight(); step += collisionLayer.getTileHeight() / 2) {
-            if (isCellBlocked(getX() + getWidth(), getY() + step))
+        for(float i = 0; i < getHeight(); i += collisionLayer.getTileHeight() / 2) {
+            if (isCellBlocked(getX() + getWidth(), getY() + i))
                 return true;
 
         }
         return false;
     }
     private boolean collidesLeft(){
-        for(float step = 0; step < getHeight(); step += collisionLayer.getTileHeight() / 2) {
-            if (isCellBlocked(getX(), getY() + step))
+        for(float i = 0; i < getHeight(); i += collisionLayer.getTileHeight() / 2) {
+            if (isCellBlocked(getX(), getY() + i))
                 return true;
         }
         return false;
     }
     private boolean collidesTop(){
-        for(float step = 0; step < getWidth(); step += collisionLayer.getTileWidth() / 2) {
-            if (isCellBlocked(getX() + step, getY() + getHeight()))
+        for(float i = 0; i < getWidth(); i += collisionLayer.getTileWidth() / 2) {
+            if (isCellBlocked(getX() + i, getY() + getHeight()))
                 return true;
         }
         return false;
     }
     private boolean collidesBottom(){
-        for(int step = 0; step < getWidth(); step += collisionLayer.getTileWidth() / 2){
-            if(isCellBlocked(getX() + step, getY()))
+        for(int i = 0; i < getWidth(); i += collisionLayer.getTileWidth() / 2){
+            if(isCellBlocked(getX() + i, getY()))
                 return true;
         }
         return false;
